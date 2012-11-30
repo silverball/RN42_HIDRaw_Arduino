@@ -1,5 +1,5 @@
 #######################################
-# Syntax Coloring Map For DHT22
+# Syntax Coloring Map For RN42RawLib
 #######################################
 
 #######################################
@@ -12,10 +12,10 @@ RN42_HIDRaw_Arduino	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
-SendKeyboardRaw		KEYWORD2
+SendKeyboardRaw	KEYWORD2
 SendKeyboardRawBlank	KEYWORD2
-SendGamepadRaw		KEYWORD2
-SendMouseRaw		KEYWORD2
+SendGamepadRaw	KEYWORD2
+SendMouseRaw	KEYWORD2
 
 #######################################
 # Instances (KEYWORD2)
