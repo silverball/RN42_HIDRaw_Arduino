@@ -1,0 +1,27 @@
+#######################################
+# Syntax Coloring Map For DHT22
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+RN42_HIDRaw_Arduino	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+SendKeyboardRaw		KEYWORD2
+SendKeyboardRawBlank	KEYWORD2
+SendGamepadRaw		KEYWORD2
+SendMouseRaw		KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
