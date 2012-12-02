@@ -24,6 +24,8 @@
   bit 7		|bit 6 		|bit 5		|bit 4	|bit 3	|bit 2	|bit 1		|bit 0
   rt GUI	|rt alt		|rt shift	|rt ctrl|lt GUI	|lt alt	|lt shift	|lt ctrl
   
+  You must initialize the Serial library in your code before you call any of these functions.
+  The default speed for the RN42 is 115200 - add this in the setup function Serial.begin(115200);
   */
 
 #include <stdlib.h>
@@ -35,16 +37,18 @@
 RN42_HIDRaw_Arduino::RN42_HIDRaw_Arduino(){
 }
 
-
+//Sends a raw report for a keyboard HID
 void RN42_HIDRaw_Arduino::SendKeyboardRaw(char raw_data[], uint8_t mod_bit){
 
 	//write the RN42 Keyboard raw header
-	Serial.write((uint8_t)0xFD);
-    Serial.write((uint8_t)0x09);
-    Serial.write((uint8_t)0x01);
-    Serial.write((uint8_t)mod_bit);
-    Serial.write((uint8_t)0x00);
+	Serial.write((uint8_t)0xFD); //start byte indicator for RN42
+    Serial.write((uint8_t)0x09); //length of the raw report (how many bytes)
+    Serial.write((uint8_t)0x01); //descritptor byte see the RN42 HID manual for details 0x01 is keyboard
+    Serial.write((uint8_t)mod_bit); //modifier bit (indicates shift, control, and other keys (see comments above)
+    Serial.write((uint8_t)0x00); //unused always send 0x00
 	//write the key press data
+	//each of these should be an ASCII keycode indicating a keypressed
+	//example 0x04 is an 'a' see the RN42 HID manual for a list of codes
 	Serial.write((uint8_t)raw_data[0]);
     Serial.write((uint8_t)raw_data[1]);
     Serial.write((uint8_t)raw_data[2]);
@@ -53,6 +57,7 @@ void RN42_HIDRaw_Arduino::SendKeyboardRaw(char raw_data[], uint8_t mod_bit){
     Serial.write((uint8_t)raw_data[5]);
 }
 
+//This function just send a raw report with no keys or modifiers pressed
 void RN42_HIDRaw_Arduino::SendKeyboardRawBlank(void){
 	
 	//write the RN42 Keyboard raw header
@@ -70,17 +75,22 @@ void RN42_HIDRaw_Arduino::SendKeyboardRawBlank(void){
     Serial.write((uint8_t)0x00);
 }
 
-void RN42_HIDRaw_Arduino::SendGamepadRaw(char x_left, char y_left, char x_rt, char y_rt, uint8_t buttons1, uint8_t buttons2)
+//Sends a raw report for a gamepad
+void RN42_HIDRaw_Arduino::SendGamepadRaw(char x_left, char y_left, char z_pos, char rot_pos, uint8_t buttons1, uint8_t buttons2)
 {
 	//write the header part for RN42
-	Serial.write((uint8_t)0xFD);
-	Serial.write((uint8_t)0x06);
+	Serial.write((uint8_t)0xFD); //start byte
+	Serial.write((uint8_t)0x06); //length of the descriptor
 	//gampad positions and buttons
-	Serial.write((uint8_t)x_left);
-	Serial.write((uint8_t)y_left);
-	Serial.write((uint8_t)x_rt);
-	Serial.write((uint8_t)y_rt);
-	Serial.write((uint8_t)buttons1);
+	//on a gamepad there typically is two analog joysticks one is typically used to
+	//indicate x/y position and one is for z/rotation. 
+	Serial.write((uint8_t)x_left); //value between -127 to 127 indicating the x postition
+	Serial.write((uint8_t)y_left); //value between -127 to 127 indicating the y postition
+	Serial.write((uint8_t)z_pos); //value between -127 to 127 indicating the z postition
+	Serial.write((uint8_t)rot_pos); //value between -127 to 127 indicating the rotation postition
+	//one bit for each button pressed there can be a total of 16 buttons one byte in each
+	//set the bit to show a button pressed and clear the bit to indicate not pressed
+	Serial.write((uint8_t)buttons1); 
 	Serial.write((uint8_t)buttons2);
 }
 
